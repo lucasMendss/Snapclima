@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Ubuntu:wght@400;500&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
-    <title>SNAPCLIMA</title>
+    <title>SnapClima</title>
 </head>
 
 <body>
@@ -19,9 +19,13 @@
     <div class="header__city-search-bar">
         <input class="header__input" id="city-search-input" type="text" placeholder="Temperatura de qual cidade?">
         <button class="header__button" id="city-search-button">
-            <img class="header__button-icon" src="./assets/search-icon.svg" alt="ícone de uma lupa.">
+            <img class="header__button-icon" src="./assets/light-search-icon.png" alt="ícone de uma lupa.">
         </button>
     </div>
+
+    <button class="header__button header__theme-button" id="theme-toggle-button" aria-label="Alternar tema">
+          <img class="header__button-icon" src="./assets/dark-theme-icon.png" alt="Alternar tema escuro">
+    </button>
 
     <div class="header__current-date" id="current-date">...</div>
     <div class="header__city-name" id="city-name">...</div>

@@ -1,10 +1,30 @@
+:root {
+    --color-page-bg: #eaebf3;
+    --color-button-bg: #393939;
+    --color-button-icon: #c9cbd6;
+    --color-text-primary: #000000;
+    --color-text-muted: #a2a2be;
+    --color-accent-lavender: #b6aef0;
+    --color-surface: #fff;
+}
+
+.dark {
+    --color-page-bg: #0f1117;
+    --color-button-bg: #e6e9f2;
+    --color-button-icon: #1b1f2a;
+    --color-text-primary: #ffffff;
+    --color-text-muted: #b7bfd6;
+    --color-accent-lavender: #cdc6ff;
+    --color-surface: #171b26;
+}
+
 * {
     margin: 0px;
     padding: 0px;
 }
 
 body {
-    background-color: #eaebf3;
+    background-color: var(--color-page-bg);
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
 }
@@ -18,6 +38,7 @@ body {
 
 .header{
     padding: 0 30px;
+    position: relative;
 }
 
 .header__city-search-bar{
@@ -40,13 +61,13 @@ body {
 
 .header__button{
     cursor: pointer;
-    height: 35px;
+    height: 46px;
     border: none;
     border-radius: 100%;
-    min-width: 50px;
-    min-height: 50px;
-    background-color: #393939;
-    color: #c9cbd6;
+    min-width: 46px;
+    min-height: 46px;
+    background-color: var(--color-button-bg);
+    color: var(--color-button-icon);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -57,17 +78,49 @@ body {
     filter: brightness(1.5);
 }
 
+.header__button-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.header__theme-button {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    z-index: 10;
+}
+
+@media (max-width: 760px) {
+    .header__theme-button {
+        position: absolute;
+        top: auto;
+        bottom: 0;
+        right: 30px;
+    }
+
+    .header__city-search-bar {
+        margin-top: 30px;
+    }
+
+    .header__current-date,
+    .header__city-name {
+        padding-right: 72px;
+    }
+}
+
 .header__current-date, .header__city-name{
     font-family: "Ubuntu", sans-serif;
 }
 
 .header__current-date{
-    color: #a2a2be;
+    color: var(--color-text-muted);
     font-size: 14px;
     margin-top: 15px;
 }
 
 .header__city-name{
+    color: var(--color-text-primary);
     font-weight: 500;
     font-size: 20px;
     margin-top: 6px;
@@ -92,7 +145,7 @@ body {
 }
 
 .current-temperature__description{
-    color: #b6aef0;
+    color: var(--color-accent-lavender);
     font-weight: 500;
     font-size: 24px;
     margin-top: 30px;
@@ -100,10 +153,11 @@ body {
 
 .current-temperature__info-label{
     margin-top: 15px;
-    color: #a2a2be
+    color: var(--color-text-muted)
 }
 
 .current-temperature__current-temperature{
+    color: var(--color-text-primary);
     font-size: 24px;
     font-weight: 500;
     margin-top: 10px;
@@ -112,7 +166,7 @@ body {
 /* BOTTOM CONTAINER */
 
 .bottom-container{
-    background-color: #fff;
+    background-color: var(--color-surface);
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -129,7 +183,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border-right: 1px solid #a2a2be;
+    border-right: 1px solid var(--color-text-muted);
 }
 
 .temperature-details__item:last-child{
@@ -137,8 +191,13 @@ body {
 }
 
 .temperature-details__value, .sunset-sunrise_value{
+    color: var(--color-text-primary);
     font-weight: 500;
     margin-top: 7px;
+}
+
+.temperature-details__label{
+    color: var(--color-text-primary);
 }
 
 /* SUN */
