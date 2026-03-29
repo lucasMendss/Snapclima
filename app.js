@@ -62,13 +62,13 @@ function toggleTheme() {
     const darkThemeIsActive = document.body.classList.toggle('dark')
 
     if (darkThemeIsActive) {
-        citySearchButtonIcon.src = '/assets/dark-search-icon.png'
+        citySearchButtonIcon.src = './assets/dark-search-icon.png'
         themeToggleIcon.src = './assets/light-theme-icon.png'
         themeToggleIcon.alt = 'Alternar para tema claro'
         return
     }
 
-    citySearchButtonIcon.src = '/assets/light-search-icon.png'
+    citySearchButtonIcon.src = './assets/light-search-icon.png'
     themeToggleIcon.src = './assets/dark-theme-icon.png'
     themeToggleIcon.alt = 'Alternar para tema escuro'
 }
