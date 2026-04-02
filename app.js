@@ -17,14 +17,12 @@ const currentHumidity = document.getElementById('humidity')
 const sunriseTime = document.getElementById('sunrise-time')
 const sunsetTime = document.getElementById('sunset-time')
 
-const apiKey = "03c80a3cb34b0abfbbcaadde6ae158f5"
+const WEATHER_API_URL = "https://snapclima-one.vercel.app//api/weather"
 
 citySearchButton.addEventListener("click", () => {
     let cityName = citySearchInput.value
     getCityWeather(cityName)
 })
-
-// https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&lang=pt_br&appid=${API key}
 
 navigator.geolocation.getCurrentPosition(
     (position) => {
@@ -35,7 +33,7 @@ navigator.geolocation.getCurrentPosition(
     },
     (err) => {
         if (err.code === 1) {
-            alert("Geolocalização negada pelo usuário, busque manualmente por uma cidade através da barra de pesquisa")
+            alert("Geolocalização automática negada pelo usuário. Busque manualmente por uma cidade usando a barra de pesquisa")
         }
         else {
             console.log(err)
@@ -44,18 +42,25 @@ navigator.geolocation.getCurrentPosition(
 )
 
 function getCityWeather(cityName) {
-
     weatherIcon.src = `./assets/loading-icon.svg`
 
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&lang=pt_br&appid=${apiKey}`)
+    fetch(`${WEATHER_API_URL}?city=${cityName}`)
         .then((response) => response.json())
         .then((data) => displayWeather(data))
+        .catch((error) => {
+            console.error("Erro ao buscar informações: ", error)
+            alert("Erro ao buscar dados do tempo da cidade. Tente novamente.")
+        })
 }
 
 function getCurrentLocationWeather(lat, lon) {
-    fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=pt_br&appid=${apiKey}`)
+    fetch(`${WEATHER_API_URL}?lat=${lat}&lon=${lon}`)
         .then((response) => response.json())
         .then((data) => displayWeather(data))
+        .catch((error) => {
+            console.error("Erro ao buscar informações: ", error)
+            alert("Erro ao buscar dados de localização.")
+        })
 }
 
 function toggleTheme() {
