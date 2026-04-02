@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ message: "Informe city ou lat/lon" });
   }
 
-  const apiKey = process.env.OPENWEATHER_API_KEY;
+  const apiKey = process.env.OPENWEATHER_API_KEY_2;
 
   const base = "https://api.openweathermap.org/data/2.5/weather";
   const params = new URLSearchParams({
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
       return res.status(response.status).json(data);
     }
 
-    res.setHeader("Access-Control-Allow-Origin", "https://SEU-USUARIO.github.io");
+    res.setHeader("Access-Control-Allow-Origin", "https://lucasMendss.github.io");
     res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
 
     return res.status(200).json(data);
