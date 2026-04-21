@@ -5,10 +5,8 @@ export default async function handler(req, res) {
   const origin = req.headers.origin;
   const normalizedOrigin = origin?.toLowerCase();
 
-  const allowedOrigins = new Set([
-    "https://lucasmendss.github.io",
-    "https://snapclima-one.vercel.app",
-  ]);
+  const isVercelNormalOrigin = 
+    normalizedOrigin === "https://snapclima-one.vercel.app";
 
   const isVercelPreviewOrigin =
     normalizedOrigin &&
@@ -18,7 +16,7 @@ export default async function handler(req, res) {
     normalizedOrigin &&
     /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(normalizedOrigin);
 
-  if (origin && (allowedOrigins.has(normalizedOrigin) || isLocalOrigin || isVercelPreviewOrigin)) {
+  if (origin && (isVercelNormalOrigin || isLocalOrigin || isVercelPreviewOrigin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Vary", "Origin");
     res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
