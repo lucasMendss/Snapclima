@@ -4,12 +4,6 @@ export default async function handler(req, res) {
   const lon = req.query.lon;
   const origin = req.headers.origin;
 
-  if (!city && (!lat || !lon)) {
-    return res.status(400).json({ message: "Informe city ou lat/lon" });
-  }
-
-  const apiKey = process.env.OPENWEATHER_API_KEY_2;
-
   const allowedOrigins = new Set([
     "https://lucasmendss.github.io",
     "https://lucasMendss.github.io",
@@ -22,7 +16,19 @@ export default async function handler(req, res) {
   if (origin && (allowedOrigins.has(origin) || isLocalOrigin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Vary", "Origin");
+    res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
   }
+
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
+
+  if (!city && (!lat || !lon)) {
+    return res.status(400).json({ message: "Informe o nome de uma cidade ou latitude e longitude" });
+  }
+
+  const apiKey = process.env.OPENWEATHER_API_KEY_2;
 
   const base = "https://api.openweathermap.org/data/2.5/weather";
   const params = new URLSearchParams({

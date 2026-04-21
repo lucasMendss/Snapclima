@@ -17,7 +17,7 @@ const currentHumidity = document.getElementById('humidity')
 const sunriseTime = document.getElementById('sunrise-time')
 const sunsetTime = document.getElementById('sunset-time')
 
-const WEATHER_API_URL = "https://snapclima-one.vercel.app//api/weather"
+const WEATHER_API_URL = "https://snapclima-one.vercel.app/api/weather"
 
 citySearchButton.addEventListener("click", () => {
     let cityName = citySearchInput.value
@@ -33,34 +33,54 @@ navigator.geolocation.getCurrentPosition(
     },
     (err) => {
         if (err.code === 1) {
-            alert("Geolocalização automática negada pelo usuário. Busque manualmente por uma cidade usando a barra de pesquisa")
+            const errorMessage = "Geolocalização automática negada pelo usuário. Busque manualmente por uma cidade usando a barra de pesquisa."
+            console.log(errorMessage);
+            alert(errorMessage);
         }
         else {
-            console.log(err)
+            console.log('Erro: ' + err.message);
         }
     }
 )
 
-function getCityWeather(cityName) {
-    weatherIcon.src = `./assets/loading-icon.svg`
+async function getCityWeather(cityName) {
+  weatherIcon.src = "./assets/loading-icon.svg";
 
-    fetch(`${WEATHER_API_URL}?city=${cityName}`)
-        .then((response) => response.json())
-        .then((data) => displayWeather(data))
-        .catch((error) => {
-            console.error("Erro ao buscar informações: ", error)
-            alert("Erro ao buscar dados do tempo da cidade. Tente novamente.")
-        })
+  try {
+    const response = await fetch(`${WEATHER_API_URL}?city=${cityName}`);
+    const data = await response.json();
+
+    const cityNotFound =
+      String(data?.message || "").toLowerCase() === "city not found";
+
+    if (!response.ok) {
+      throw new Error(cityNotFound ? "Cidade não encontrada" : "Erro ao buscar cidade");
+    }
+
+    displayWeather(data);
+  } catch (error) {
+    const message =
+      String(error?.message || "").toLowerCase() === "cidade não encontrada"
+        ? "Cidade não encontrada"
+        : "Erro ao buscar dados do tempo da cidade. tente novamente.";
+
+    console.error(message);
+    alert(message);
+  }
 }
 
-function getCurrentLocationWeather(lat, lon) {
-    fetch(`${WEATHER_API_URL}?lat=${lat}&lon=${lon}`)
-        .then((response) => response.json())
-        .then((data) => displayWeather(data))
-        .catch((error) => {
-            console.error("Erro ao buscar informações: ", error)
-            alert("Erro ao buscar dados de localização.")
-        })
+async function getCurrentLocationWeather(lat, lon) {
+
+    const response = await fetch(`${WEATHER_API_URL}?lat=${lat}&lon=${lon}`)
+    const data = await response.json();
+
+    try{
+        displayWeather(data);
+    }
+    catch(error){
+        console.error("Erro ao buscar informações: ", error)
+        alert("Erro ao buscar dados de localização.")    
+    }
 }
 
 function toggleTheme() {
