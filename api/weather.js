@@ -3,17 +3,22 @@ export default async function handler(req, res) {
   const lat = req.query.lat;
   const lon = req.query.lon;
   const origin = req.headers.origin;
+  const normalizedOrigin = origin?.toLowerCase();
 
   const allowedOrigins = new Set([
     "https://lucasmendss.github.io",
-    "https://lucasMendss.github.io",
+    "https://snapclima-one.vercel.app",
   ]);
 
-  const isLocalOrigin =
-    origin &&
-    /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin);
+  const isVercelPreviewOrigin =
+    normalizedOrigin &&
+    /^https:\/\/snapclima-[a-z0-9-]+-lucasmendss(?:-projects)?\.vercel\.app$/i.test(normalizedOrigin);
 
-  if (origin && (allowedOrigins.has(origin) || isLocalOrigin)) {
+  const isLocalOrigin =
+    normalizedOrigin &&
+    /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(normalizedOrigin);
+
+  if (origin && (allowedOrigins.has(normalizedOrigin) || isLocalOrigin || isVercelPreviewOrigin)) {
     res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Vary", "Origin");
     res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
