@@ -5,10 +5,6 @@ export default async function handler(req, res) {
   const origin = req.headers.origin;
   const normalizedOrigin = origin?.toLowerCase();
 
-  if (!origin) {
-    return res.status(403).json({ message: "Origem não permitida" });
-  }
-
   const isVercelNormalOrigin =
     normalizedOrigin === "https://snapclima-one.vercel.app";
 
@@ -18,17 +14,20 @@ export default async function handler(req, res) {
   const isLocalOrigin =
     /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(normalizedOrigin);
 
+  const hasOrigin = Boolean(origin);
   const isAllowedOrigin =
     isVercelNormalOrigin || isLocalOrigin || isVercelPreviewOrigin;
 
-  if (!isAllowedOrigin) {
+  if (hasOrigin && !isAllowedOrigin) {
     return res.status(403).json({ message: "Origem não permitida" });
   }
 
-  res.setHeader("Access-Control-Allow-Origin", origin);
-  res.setHeader("Vary", "Origin");
-  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (hasOrigin && isAllowedOrigin) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+    res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  }
 
   if (req.method === "OPTIONS") {
     return res.status(204).end();
