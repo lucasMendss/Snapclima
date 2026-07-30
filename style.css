@@ -84,29 +84,34 @@ body {
     object-fit: contain;
 }
 
+#current-location-search-button{
+    min-height: 0px;
+    max-height: 25px;
+    padding: 8px;
+    border-radius: 50px;
+    margin-top: 3px;
+}
+
+.header__utility-buttons-div{
+    position: absolute; 
+    right: 30px; 
+    width: fit-content;    
+    height:fit-content; 
+    
+}
+
+.header__utility-buttons-div button{
+    margin-bottom: 5px;
+}
+
 .header__theme-button {
-    position: fixed;
-    top: 30px;
-    right: 30px;
     z-index: 10;
 }
 
-@media (max-width: 760px) {
-    .header__theme-button {
-        position: absolute;
-        top: auto;
-        bottom: 0;
-        right: 30px;
-    }
-
-    .header__city-search-bar {
-        margin-top: 30px;
-    }
-
-    .header__current-date,
-    .header__city-name {
-        padding-right: 72px;
-    }
+.header__temperature-unit-button {
+    color: var(--color-button-icon);
+    z-index: 10; 
+    font-size: 150%;   
 }
 
 .header__current-date, .header__city-name{
@@ -212,4 +217,20 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+@media (max-width: 760px) {
+    .header__city-search-bar {
+        margin-top: 30px;
+        right: 30px;
+    }
+
+    .header__current-date,
+    .header__city-name {
+        padding-right: 72px;
+    }
+
+    .header__utility-buttons-div{
+        margin-top: 60px;
+    }
 }

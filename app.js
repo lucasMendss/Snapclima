@@ -1,9 +1,11 @@
 // INTERAÇÃO
 const citySearchInput = document.getElementById('city-search-input')
 const citySearchButton = document.getElementById('city-search-button')
+const citySearchButtonIcon = citySearchButton?.querySelector('img');
+const currentLocationSearchButton = document.getElementById('current-location-search-button')
 const themeToggleButton = document.getElementById('theme-toggle-button')
 const themeToggleIcon = themeToggleButton?.querySelector('img')
-const citySearchButtonIcon = citySearchButton?.querySelector('img');
+const temperatureUnitButton = document.querySelector('.header__temperature-unit-button')
 
 // EXIBIÇÃO
 const currentDate = document.getElementById('current-date')
@@ -18,30 +20,91 @@ const sunriseTime = document.getElementById('sunrise-time')
 const sunsetTime = document.getElementById('sunset-time')
 
 const WEATHER_API_URL = "https://snapclima-one.vercel.app/api/weather"
+let isCelsiusUnitActive = true
+
+function toggleTheme() {
+    const darkThemeIsActive = document.body.classList.toggle('dark')
+
+    if (darkThemeIsActive) {
+        citySearchButtonIcon.src = './assets/dark-search-icon.png'
+        themeToggleIcon.src = './assets/light-theme-icon.png'
+        themeToggleIcon.alt = 'Alternar para tema claro'
+        return
+    }
+
+    citySearchButtonIcon.src = './assets/light-search-icon.png'
+    themeToggleIcon.src = './assets/dark-theme-icon.png'
+    themeToggleIcon.alt = 'Alternar para tema escuro'
+}
+
+if (themeToggleButton && themeToggleIcon) {
+    themeToggleButton.addEventListener('click', toggleTheme)
+}
+
+function toggleTemperatureUnitOfMeasure(){
+    const temperatureFields = document.querySelectorAll('.has-temperature-unit')
+
+    if (!temperatureFields.length) {
+        return
+    }
+
+    temperatureFields.forEach((temperatureField) => {
+        const numericText = temperatureField.textContent?.replace('ºC', '').replace('ºF', '').trim()
+        const parsedValue = Number(numericText)
+
+        if (Number.isNaN(parsedValue)) {
+            return
+        }
+
+        const convertedValue = isCelsiusUnitActive
+            ? (parsedValue * 9) / 5 + 32
+            : ((parsedValue - 32) * 5) / 9
+
+        const nextUnit = isCelsiusUnitActive ? 'ºF' : 'ºC'
+        temperatureField.textContent = `${Math.round(convertedValue)}${nextUnit}`
+    })
+
+    isCelsiusUnitActive = !isCelsiusUnitActive
+    temperatureUnitButton.textContent = isCelsiusUnitActive ? 'ºF' : 'ºC'
+}
+
+if (temperatureUnitButton) {
+    temperatureUnitButton.addEventListener('click', toggleTemperatureUnitOfMeasure)
+}
 
 citySearchButton.addEventListener("click", () => {
     let cityName = citySearchInput.value
     getCityWeather(cityName)
 })
 
-navigator.geolocation.getCurrentPosition(
-    (position) => {
-        let lat = position.coords.latitude
-        let lon = position.coords.longitude
+function requestCurrentLocationWeather() {
+    citySearchInput.value = "";
 
-        getCurrentLocationWeather(lat, lon)
-    },
-    (err) => {
-        if (err.code === 1) {
-            const errorMessage = "Geolocalização automática negada pelo usuário. Busque manualmente por uma cidade usando a barra de pesquisa."
-            console.log(errorMessage);
-            alert(errorMessage);
+    navigator.geolocation.getCurrentPosition(
+        (position) => {
+            let lat = position.coords.latitude
+            let lon = position.coords.longitude
+
+            getCurrentLocationWeather(lat, lon)
+        },
+        (err) => {
+            if (err.code === 1) {
+                const errorMessage = "Geolocalização automática negada pelo usuário. Busque manualmente por uma cidade usando a barra de pesquisa."
+                console.log(errorMessage);
+                alert(errorMessage);
+            }
+            else {
+                console.log('Erro: ' + err.message);
+            }
         }
-        else {
-            console.log('Erro: ' + err.message);
-        }
-    }
-)
+    )
+}
+
+if (currentLocationSearchButton) {
+    currentLocationSearchButton.addEventListener("click", requestCurrentLocationWeather);
+}
+
+requestCurrentLocationWeather();
 
 async function getCityWeather(cityName) {
   weatherIcon.src = "./assets/loading-icon.svg";
@@ -83,25 +146,6 @@ async function getCurrentLocationWeather(lat, lon) {
     }
 }
 
-function toggleTheme() {
-    const darkThemeIsActive = document.body.classList.toggle('dark')
-
-    if (darkThemeIsActive) {
-        citySearchButtonIcon.src = './assets/dark-search-icon.png'
-        themeToggleIcon.src = './assets/light-theme-icon.png'
-        themeToggleIcon.alt = 'Alternar para tema claro'
-        return
-    }
-
-    citySearchButtonIcon.src = './assets/light-search-icon.png'
-    themeToggleIcon.src = './assets/dark-theme-icon.png'
-    themeToggleIcon.alt = 'Alternar para tema escuro'
-}
-
-if (themeToggleButton && themeToggleIcon) {
-    themeToggleButton.addEventListener('click', toggleTheme)
-}
-
 function displayWeather(data) {
     let {
         dt,
@@ -123,6 +167,11 @@ function displayWeather(data) {
     currentHumidity.textContent = `${humidity}%`
     sunriseTime.textContent = formatTime(sunrise, timezone)
     sunsetTime.textContent = formatTime(sunset, timezone)
+
+    isCelsiusUnitActive = true
+    if (temperatureUnitButton) {
+        temperatureUnitButton.textContent = 'ºF'
+    }
 }
 
 function formatDate(dateTime, timezone) {
