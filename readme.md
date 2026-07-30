@@ -1,6 +1,6 @@
 # Snapclima
 
-O Snapclima é uma página web para consultar informações meteorológicas em tempo real de uma localização (cidade, estado, país) digitada pelo usuário ou da localização atual do mesmo, identificada automaticamente por meio da latitude e longitude.
+O Snapclima é uma página web para consultar informações meteorológicas em tempo real de uma localização (cidade, estado, país) digitada pelo usuário ou da localização atual do mesmo, identificada automaticamente por meio da latitude e longitude. O algoritmo faz comunicação com uma API da OpenWeather.
 
 Variáveis meteorológicas exibidas:
 
