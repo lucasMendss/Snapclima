@@ -1,6 +1,6 @@
 # Snapclima
 
-O Snapclima é uma página web para consultar informações meteorológicas em tempo real de uma localização (cidade, estado, país) digitada pelo usuário ou da localização atual do mesmo, identificada automaticamente por meio da latitude e longitude. O algoritmo faz comunicação com uma API da OpenWeather.
+O Snapclima é uma página web para consultar informações meteorológicas em tempo real de uma localização (cidade, estado, país) digitada pelo usuário ou da localização atual do mesmo, identificada automaticamente por meio da latitude e longitude.
 
 Variáveis meteorológicas exibidas:
 
@@ -12,23 +12,27 @@ Variáveis meteorológicas exibidas:
 - Horário do nascer do sol;
 - Horário do pôr do sol.
 
-## Tecnologias utilizadas
-
-- HTML, CSS, Javascript
-- Hospedagem na Vercel
-
 ## Funcionalidades
 
 ### Principais
 
-- Busca por nome de local;
-- Busca utilizando localização atual do usuário.
+- Buscar atuais dados meteorológicos
+    - de localização digitada na barra de pesquisa;
+    - de localização atual do usuário.
 
 ### Utilitárias
 
 - Trocar tema da página (claro ou escuro);
 - Trocar unidade de medida das temperaturas (ºC ou ºF).
 
-## Esquema visual da aplicação
+## Utilizar aplicação
+Você pode testar a aplicação diretamente no navegador, sem baixar nada. Acesse [clicando aqui](https://snapclima-one.vercel.app/).
 
-![esquema visual do Snapclima](diagrama-snapclima.drawio.png)
+## Tecnologias utilizadas
+
+- HTML, CSS, Javascript;
+- Vercel (Hospedagem e Função Serverless).
+
+## Diagrama de Implantação
+
+![esquema visual do Snapclima](diagrama-de-implantacao-snapclima.png)
