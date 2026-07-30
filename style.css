@@ -137,7 +137,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 30px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .current-temperature__weather-icon{
