@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const city = req.query.city;
+  const location = req.query.location;
   const lat = req.query.lat;
   const lon = req.query.lon;
   const origin = req.headers.origin;
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
     return res.status(204).end();
   }
 
-  if (!city && (!lat || !lon)) {
+  if (!location && (!lat || !lon)) {
     return res.status(400).json({ message: "Informe o nome de uma cidade ou latitude e longitude" });
   }
 
@@ -46,7 +46,7 @@ export default async function handler(req, res) {
     appid: apiKey
   });
 
-  if (city) params.set("q", city);
+  if (location) params.set("q", location);
   if (lat && lon) {
     params.set("lat", lat);
     params.set("lon", lon);

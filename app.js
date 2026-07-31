@@ -1,47 +1,62 @@
-// INTERAÇÃO
-const citySearchInput = document.getElementById('city-search-input')
-const citySearchButton = document.getElementById('city-search-button')
-const citySearchButtonIcon = citySearchButton?.querySelector('img');
+// interaction vars
+const locationSearchInput = document.getElementById('location-search-input')
+const locationSearchButton = document.getElementById('location-search-button')
+const locationSearchButtonIcon = locationSearchButton?.querySelector('img');
 const currentLocationSearchButton = document.getElementById('current-location-search-button')
 const themeToggleButton = document.getElementById('theme-toggle-button')
 const themeToggleIcon = themeToggleButton?.querySelector('img')
 const temperatureUnitButton = document.querySelector('.header__temperature-unit-button')
 
-// EXIBIÇÃO
+// display vars
 const currentDate = document.getElementById('current-date')
-const cityName = document.getElementById('city-name')
+const locationName = document.getElementById('location-name')
 const weatherIcon = document.getElementById('weather-icon')
 const weatherDescription = document.getElementById('weather-description')
 const currentTemperature = document.getElementById('current-temperature')
 const windSpeed = document.getElementById('wind-speed')
 const thermalSensation = document.getElementById('thermal-sensation')
-const currentHumidity = document.getElementById('humidity')
-const sunriseTime = document.getElementById('sunrise-time')
-const sunsetTime = document.getElementById('sunset-time')
+const currentHumidity = document.getElementById('humidity');
+const sunriseTime = document.getElementById('sunrise-time');
+const sunsetTime = document.getElementById('sunset-time');
 
-const WEATHER_API_URL = "https://snapclima-one.vercel.app/api/weather"
-let isCelsiusUnitActive = true
+// backend vars
+const WEATHER_API_URL = "https://snapclima-one.vercel.app/api/weather";
+let isCelsiusUnitActive = true;
 
-function toggleTheme() {
-    const darkThemeIsActive = document.body.classList.toggle('dark')
-
-    if (darkThemeIsActive) {
-        citySearchButtonIcon.src = './assets/dark-search-icon.png'
-        themeToggleIcon.src = './assets/light-theme-icon.png'
-        themeToggleIcon.alt = 'Alternar para tema claro'
-        return
-    }
-
-    citySearchButtonIcon.src = './assets/light-search-icon.png'
-    themeToggleIcon.src = './assets/dark-theme-icon.png'
-    themeToggleIcon.alt = 'Alternar para tema escuro'
-}
+requestCurrentLocationWeather();
 
 if (themeToggleButton && themeToggleIcon) {
     themeToggleButton.addEventListener('click', toggleTheme)
 }
 
-function toggleTemperatureUnitOfMeasure(){
+if (temperatureUnitButton) {
+    temperatureUnitButton.addEventListener('click', toggleTemperatureUnitOfMeasure)
+}
+
+if (currentLocationSearchButton) {
+    currentLocationSearchButton.addEventListener("click", requestCurrentLocationWeather);
+}
+
+locationSearchButton.addEventListener("click", () => {
+    getAndDisplayLocationWeather(locationSearchInput.value);
+})
+
+function toggleTheme() {
+    const darkThemeIsActive = document.body.classList.toggle('dark')
+
+    if (darkThemeIsActive) {
+        locationSearchButtonIcon.src = './assets/dark-search-icon.png'
+        themeToggleIcon.src = './assets/light-theme-icon.png'
+        themeToggleIcon.alt = 'Alternar para tema claro'
+        return
+    }
+
+    locationSearchButtonIcon.src = './assets/light-search-icon.png'
+    themeToggleIcon.src = './assets/dark-theme-icon.png'
+    themeToggleIcon.alt = 'Alternar para tema escuro'
+}
+
+function toggleTemperatureUnitOfMeasure() {
     const temperatureFields = document.querySelectorAll('.has-temperature-unit')
 
     if (!temperatureFields.length) {
@@ -68,24 +83,15 @@ function toggleTemperatureUnitOfMeasure(){
     temperatureUnitButton.textContent = isCelsiusUnitActive ? 'ºF' : 'ºC'
 }
 
-if (temperatureUnitButton) {
-    temperatureUnitButton.addEventListener('click', toggleTemperatureUnitOfMeasure)
-}
-
-citySearchButton.addEventListener("click", () => {
-    let cityName = citySearchInput.value
-    getCityWeather(cityName)
-})
-
 function requestCurrentLocationWeather() {
-    citySearchInput.value = "";
+    locationSearchInput.value = "";
 
     navigator.geolocation.getCurrentPosition(
         (position) => {
             let lat = position.coords.latitude
             let lon = position.coords.longitude
 
-            getCurrentLocationWeather(lat, lon)
+            getAndDisplayCurrentLocationWeather(lat, lon)
         },
         (err) => {
             if (err.code === 1) {
@@ -100,49 +106,43 @@ function requestCurrentLocationWeather() {
     )
 }
 
-if (currentLocationSearchButton) {
-    currentLocationSearchButton.addEventListener("click", requestCurrentLocationWeather);
-}
+// get and display weather functions
+async function getAndDisplayLocationWeather(locationName) {
+    weatherIcon.src = "./assets/loading-icon.svg";
 
-requestCurrentLocationWeather();
+    try {
+        const response = await fetch(`${WEATHER_API_URL}?location=${locationName}`);
+        const data = await response.json();
 
-async function getCityWeather(cityName) {
-  weatherIcon.src = "./assets/loading-icon.svg";
+        const locationNotFound =
+            String(data?.message || "").toLowerCase() === "location not found";
 
-  try {
-    const response = await fetch(`${WEATHER_API_URL}?city=${cityName}`);
-    const data = await response.json();
+        if (!response.ok) {
+            throw new Error(locationNotFound ? "Cidade não encontrada" : "Erro ao buscar cidade");
+        }
 
-    const cityNotFound =
-      String(data?.message || "").toLowerCase() === "city not found";
+        displayWeather(data);
+    } catch (error) {
+        const message =
+            String(error?.message || "").toLowerCase() === "cidade não encontrada"
+                ? "Cidade não encontrada"
+                : "Erro ao buscar dados do tempo da cidade. Tente novamente.";
 
-    if (!response.ok) {
-      throw new Error(cityNotFound ? "Cidade não encontrada" : "Erro ao buscar cidade");
+        console.error(message);
+        alert(message);
     }
-
-    displayWeather(data);
-  } catch (error) {
-    const message =
-      String(error?.message || "").toLowerCase() === "cidade não encontrada"
-        ? "Cidade não encontrada"
-        : "Erro ao buscar dados do tempo da cidade. tente novamente.";
-
-    console.error(message);
-    alert(message);
-  }
 }
 
-async function getCurrentLocationWeather(lat, lon) {
-
+async function getAndDisplayCurrentLocationWeather(lat, lon) {
     const response = await fetch(`${WEATHER_API_URL}?lat=${lat}&lon=${lon}`)
     const data = await response.json();
 
-    try{
+    try {
         displayWeather(data);
     }
-    catch(error){
+    catch (error) {
         console.error("Erro ao buscar informações: ", error)
-        alert("Erro ao buscar dados de localização.")    
+        alert("Erro ao buscar informações: ", error)
     }
 }
 
@@ -158,7 +158,7 @@ function displayWeather(data) {
     } = data
 
     currentDate.textContent = `${formatDate(dt, timezone)}`
-    cityName.textContent = name
+    locationName.textContent = name
     weatherIcon.src = `./assets/${icon}.svg`
     weatherDescription.textContent = description
     currentTemperature.textContent = `${Math.round(temp)}ºC`
@@ -190,6 +190,6 @@ function formatTime(time, timezone) {
 
     const hours = String(localTime.getUTCHours()).padStart(2, '0');
     const minutes = String(localTime.getUTCMinutes()).padStart(2, '0');
-    
+
     return `${hours}h${minutes}`
 }
