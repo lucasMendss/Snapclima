@@ -108,6 +108,11 @@ function requestCurrentLocationWeather() {
 
 // get and display weather functions
 async function getAndDisplayLocationWeather(locationName) {
+    if(String(locationName).trim() === ""){
+        alert("Digite o nome de algum local antes de pesquisar.");
+        return;
+    }
+    
     weatherIcon.src = "./assets/loading-icon.svg";
 
     try {
