@@ -72,6 +72,7 @@ body {
     align-items: center;
     justify-content: center;
     transition: 0.2s;
+    z-index: 1;
 }
 
 .header__button:hover{
@@ -97,20 +98,15 @@ body {
     right: 30px; 
     width: fit-content;    
     height:fit-content; 
-    
+    z-index: 1;
 }
 
 .header__utility-buttons-div button{
     margin-bottom: 5px;
 }
 
-.header__theme-button {
-    z-index: 10;
-}
-
 .header__temperature-unit-button {
     color: var(--color-button-icon);
-    z-index: 10; 
     font-size: 150%;   
 }
 
@@ -232,6 +228,6 @@ body {
     }
 
     .header__utility-buttons-div{
-        margin-top: 60px;
+        margin-top: 52px;
     }
 }

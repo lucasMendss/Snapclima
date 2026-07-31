@@ -34,7 +34,7 @@ export default async function handler(req, res) {
   }
 
   if (!location && (!lat || !lon)) {
-    return res.status(400).json({ message: "Informe o nome de uma cidade ou latitude e longitude" });
+    return res.status(400).json({ message: "Informe o nome de um local ou uma latitude e uma longitude" });
   }
 
   const apiKey = process.env.OPENWEATHER_API_KEY_2;

@@ -95,7 +95,7 @@ function requestCurrentLocationWeather() {
         },
         (err) => {
             if (err.code === 1) {
-                const errorMessage = "Geolocalização automática negada pelo usuário. Busque manualmente por uma cidade usando a barra de pesquisa."
+                const errorMessage = "Para utilizar sua localização atual, você deve permitir que o navegador a identifique. Caso não queira, pesquise usando a barra de pesquisa";
                 console.log(errorMessage);
                 alert(errorMessage);
             }
@@ -115,19 +115,19 @@ async function getAndDisplayLocationWeather(locationName) {
         const data = await response.json();
 
         const locationNotFound =
-            String(data?.message || "").toLowerCase() === "location not found";
+            String(data?.message || "").toLowerCase() === "city not found";
 
         if (!response.ok) {
-            throw new Error(locationNotFound ? "Cidade não encontrada" : "Erro ao buscar cidade");
+            throw new Error(locationNotFound ? "Local não encontrado" : "Erro ao buscar local");
         }
 
-        displayWeather(data);
+        displayWeatherInfo(data);
     } catch (error) {
+        clearWeatherInfo();
         const message =
-            String(error?.message || "").toLowerCase() === "cidade não encontrada"
-                ? "Cidade não encontrada"
-                : "Erro ao buscar dados do tempo da cidade. Tente novamente.";
-
+            String(error?.message || "").toLowerCase() === "local não encontrado"
+                ? "Local não encontrado"
+                : "Erro ao buscar dados do tempo. Tente novamente.";
         console.error(message);
         alert(message);
     }
@@ -138,15 +138,16 @@ async function getAndDisplayCurrentLocationWeather(lat, lon) {
     const data = await response.json();
 
     try {
-        displayWeather(data);
+        displayWeatherInfo(data);
     }
     catch (error) {
+        clearWeatherInfo();
         console.error("Erro ao buscar informações: ", error)
         alert("Erro ao buscar informações: ", error)
     }
 }
 
-function displayWeather(data) {
+function displayWeatherInfo(data) {
     let {
         dt,
         name,
@@ -192,4 +193,17 @@ function formatTime(time, timezone) {
     const minutes = String(localTime.getUTCMinutes()).padStart(2, '0');
 
     return `${hours}h${minutes}`
+}
+
+function clearWeatherInfo(){
+    currentDate.textContent = '...';
+    locationName.textContent = '...';
+    weatherIcon.src = './assets/loading-icon.svg'; 
+    weatherDescription.textContent = '...';
+    currentTemperature.textContent = '...';
+    windSpeed.textContent = '...';
+    thermalSensation.textContent = '...';
+    currentHumidity.textContent = '...';
+    sunriseTime.textContent = '...';
+    sunsetTime.textContent =    '...';
 }
