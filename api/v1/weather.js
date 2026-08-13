@@ -8,9 +8,6 @@ export default async function handler(req, res) {
   const isVercelNormalOrigin =
     normalizedOrigin === "https://snapclima-one.vercel.app";
 
-  const isVercelPreviewOrigin =
-    /^https:\/\/snapclima-[a-z0-9-]+-lucasmendss(?:-projects)?\.vercel\.app$/.test(normalizedOrigin);
-
   const isLocalOrigin =
     /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(normalizedOrigin);
 

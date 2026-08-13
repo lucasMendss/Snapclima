@@ -20,6 +20,7 @@ const sunriseTime = document.getElementById('sunrise-time');
 const sunsetTime = document.getElementById('sunset-time');
 
 // backend vars
+// const WEATHER_API_URL = "http://localhost:7071/api/weather";
 const WEATHER_API_URL = "https://snapclima-one.vercel.app/api/v1/weather";
 let isCelsiusUnitActive = true;
 
