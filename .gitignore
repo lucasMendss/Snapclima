@@ -1,1 +1,2 @@
-*.drawio
+.env
+api/weather-function
