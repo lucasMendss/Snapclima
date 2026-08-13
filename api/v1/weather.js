@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
   const hasOrigin = Boolean(origin);
   const isAllowedOrigin =
-    isVercelNormalOrigin || isLocalOrigin || isVercelPreviewOrigin;
+    isVercelNormalOrigin || isLocalOrigin;
 
   if (hasOrigin && !isAllowedOrigin) {
     return res.status(403).json({ message: "Origem não permitida" });

@@ -62,7 +62,7 @@ public class Function {
                     "{\"error\":\"Variável de ambiente OPENWEATHER_API_KEY não configurada.\"}");
         }
 
-        StringBuilder url = new StringBuilder("https://api.openweathermap.org/data/2.5/weather?lang=pt_br");
+        StringBuilder url = new StringBuilder("https://api.openweathermap.org/data/2.5/weather?lang=pt_br&units=metric");
 
         if (hasLat && hasLon) {
             try {
