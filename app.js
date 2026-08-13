@@ -20,7 +20,7 @@ const sunriseTime = document.getElementById('sunrise-time');
 const sunsetTime = document.getElementById('sunset-time');
 
 // backend vars
-//const WEATHER_API_URL = "http://localhost:7071/api/v1/weather";
+//const WEATHER_API_URL = "http://localhost:7071/api/weather";
 const WEATHER_API_URL = "https://snapclima-one.vercel.app/api/v1/weather";
 
 let isCelsiusUnitActive = true;
@@ -120,10 +120,12 @@ async function getAndDisplayLocationWeather(locationName) {
     try {
         const response = await fetch(`${WEATHER_API_URL}?location=${locationName}`);
         const data = await response.json();
+        console.log(data.message);
 
         const locationNotFound =
             String(data?.message || "").toLowerCase() === "city not found";
 
+        console.log(locationNotFound);
         if (!response.ok) {
             throw new Error(locationNotFound ? "Local não encontrado" : "Erro ao buscar local");
         }
@@ -135,6 +137,7 @@ async function getAndDisplayLocationWeather(locationName) {
             String(error?.message || "").toLowerCase() === "local não encontrado"
                 ? "Local não encontrado"
                 : "Erro ao buscar dados do tempo. Tente novamente.";
+        console.log(String(error?.message || "").toLowerCase());
         console.error(message);
         alert(message);
     }

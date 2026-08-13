@@ -11,6 +11,7 @@ import com.microsoft.azure.functions.annotation.HttpTrigger;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -75,10 +76,13 @@ public class Function {
 
             url.append("&lat=").append(lat.trim())
                     .append("&lon=").append(lon.trim())
-                    .append("&appid=").append(apiKey);
+                    .append("&appid=")
+                    .append(URLEncoder.encode(apiKey, java.nio.charset.StandardCharsets.UTF_8));
         } else {
-            url.append("&q=").append(location.trim())
-                    .append("&appid=").append(apiKey);
+            url.append("&q=")
+                    .append(URLEncoder.encode(location.trim(), java.nio.charset.StandardCharsets.UTF_8))
+                    .append("&appid=")
+                    .append(URLEncoder.encode(apiKey, java.nio.charset.StandardCharsets.UTF_8));
         }
 
         HttpClient client = HttpClient.newHttpClient();
@@ -92,7 +96,7 @@ public class Function {
             HttpResponse<String> openWeatherResponse =
                     client.send(requestToOpenWeather, HttpResponse.BodyHandlers.ofString());
 
-            return request.createResponseBuilder(HttpStatus.OK)
+            return request.createResponseBuilder(HttpStatus.valueOf(openWeatherResponse.statusCode()))
                     .header("Content-Type", "application/json")
                     .body(openWeatherResponse.body())
                     .build();
