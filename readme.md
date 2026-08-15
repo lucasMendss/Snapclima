@@ -26,12 +26,13 @@ Variáveis meteorológicas exibidas:
 - Trocar unidade de medida das temperaturas (ºC ou ºF).
 
 ## Utilizar aplicação
+
 Você pode testar a aplicação diretamente no navegador, sem baixar nada. Acesse [clicando aqui](https://snapclima-one.vercel.app/).
 
 ## Tecnologias utilizadas
 
 - Frontend: HTML, CSS, Javascript;
-- Hospedagem da página: Vercel; 
+- Hospedagem da página: Vercel;
 - Cloud e função sem servidor: Azure e Java 21.
 
 ## Arquitetura
