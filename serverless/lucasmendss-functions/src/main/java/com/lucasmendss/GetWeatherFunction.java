@@ -22,7 +22,7 @@ import java.util.Optional;
  */
 
 // https://learn.microsoft.com/en-us/azure/azure-functions/functions-create-maven-intellij#create-the-function-app-in-azure
-public class Function {
+public class GetWeatherFunction {
     @FunctionName("weather")
     public HttpResponseMessage run(
             @HttpTrigger(
@@ -44,23 +44,23 @@ public class Function {
 
         if (hasLocation && (hasLat || hasLon)) {
             return jsonResponse(request, HttpStatus.BAD_REQUEST,
-                    "{\"error\":\"Informe ou 'location' ou ('lat' e 'lon'). Não envie ambos.\"}");
+                    "{\"error\":\"Informe ou 'location' ou ('lat' e 'lon'). Não envie ambos\"}");
         }
 
         if ((hasLat && !hasLon) || (!hasLat && hasLon)) {
             return jsonResponse(request, HttpStatus.BAD_REQUEST,
-                    "{\"error\":\"Se passar coordenadas, informe ambas: 'lat' e 'lon'.\"}");
+                    "{\"error\":\"Se passar coordenadas, informe ambas: 'lat' e 'lon'\"}");
         }
 
         if (!hasLocation && !(hasLat && hasLon)) {
             return jsonResponse(request, HttpStatus.BAD_REQUEST,
-                    "{\"error\":\"Informe 'location' ou ambas as coordenadas 'lat' e 'lon'.\"}");
+                    "{\"error\":\"Informe 'location' ou ambas as coordenadas 'lat' e 'lon'\"}");
         }
 
         String apiKey = System.getenv("OPENWEATHER_API_KEY");
         if (apiKey == null || apiKey.isBlank()) {
             return jsonResponse(request, HttpStatus.INTERNAL_SERVER_ERROR,
-                    "{\"error\":\"Variável de ambiente OPENWEATHER_API_KEY não configurada.\"}");
+                    "{\"error\":\"Variável de ambiente OPENWEATHER_API_KEY não configurada\"}");
         }
 
         StringBuilder url = new StringBuilder("https://api.openweathermap.org/data/2.5/weather?lang=pt_br&units=metric");
@@ -71,7 +71,7 @@ public class Function {
                 Double.parseDouble(lon.trim());
             } catch (NumberFormatException e) {
                 return jsonResponse(request, HttpStatus.BAD_REQUEST,
-                        "{\"error\":\"'lat' e 'lon' devem ser números válidos.\"}");
+                        "{\"error\":\"'lat' e 'lon' devem ser números válidos\"}");
             }
 
             url.append("&lat=").append(lat.trim())

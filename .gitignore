@@ -1,4 +1,5 @@
-/api/weather-function/.idea/
-/api/weather-function/target/
-/api/weather-function/local.settings.json
-/api/weather-function/info.txt
+*/lucasmendss-functions/.idea/
+*/lucasmendss-functions/target/
+*/lucasmendss-functions/*.json
+*/lucasmendss-functions/info.txt
+*/lucasmendss-functions/.azure/

@@ -20,12 +20,10 @@ const sunriseTime = document.getElementById('sunrise-time');
 const sunsetTime = document.getElementById('sunset-time');
 
 // backend vars
-//const WEATHER_API_URL = "http://localhost:7071/api/weather";
-const WEATHER_API_URL = "https://snapclima-one.vercel.app/api/v1/weather";
+//const WEATHER_API_URL = "http://localhost:7071/v2/weather";
+const WEATHER_API_URL = "https://fa-snapclima-agfjf4eggcb9ejb0.mexicocentral-01.azurewebsites.net/v2/weather";
 
 let isCelsiusUnitActive = true;
-
-requestCurrentLocationWeather();
 
 if (themeToggleButton && themeToggleIcon) {
     themeToggleButton.addEventListener('click', toggleTheme)
@@ -110,50 +108,59 @@ function requestCurrentLocationWeather() {
 
 // get and display weather functions
 async function getAndDisplayLocationWeather(locationName) {
-    if(String(locationName).trim() === ""){
+    if (String(locationName).trim() === "") {
         alert("Digite o nome de algum local antes de pesquisar.");
         return;
     }
-    
+
     weatherIcon.src = "./assets/loading-icon.svg";
 
     try {
         const response = await fetch(`${WEATHER_API_URL}?location=${locationName}`);
         const data = await response.json();
-        console.log(data.message);
 
-        const locationNotFound =
-            String(data?.message || "").toLowerCase() === "city not found";
-
-        console.log(locationNotFound);
-        if (!response.ok) {
-            throw new Error(locationNotFound ? "Local não encontrado" : "Erro ao buscar local");
+       if (!response.ok) {
+            throw new Error(data?.message);
         }
 
         displayWeatherInfo(data);
-    } catch (error) {
+    }
+    catch (error) {
         clearWeatherInfo();
-        const message =
-            String(error?.message || "").toLowerCase() === "local não encontrado"
-                ? "Local não encontrado"
-                : "Erro ao buscar dados do tempo. Tente novamente.";
-        console.log(String(error?.message || "").toLowerCase());
+
+        const apiErrorMessage = String(error?.message || "").toLowerCase();
+        const message = apiErrorMessage === "city not found" ? 
+            "Local não encontrado" :
+            "Erro ao buscar dados do tempo. Tente novamente.";
+
         console.error(message);
         alert(message);
     }
 }
 
 async function getAndDisplayCurrentLocationWeather(lat, lon) {
-    const response = await fetch(`${WEATHER_API_URL}?lat=${lat}&lon=${lon}`)
-    const data = await response.json();
 
     try {
+        const response = await fetch(`${WEATHER_API_URL}?lat=${lat}&lon=${lon}`)
+        const data = await response.json();
+
+        if(!response.ok){
+            throw new Error(data?.message);
+        }
+
         displayWeatherInfo(data);
     }
     catch (error) {
         clearWeatherInfo();
-        console.error("Erro ao buscar informações: ", error)
-        alert("Erro ao buscar informações: ", error)
+        
+        const apiErrorMessage = String(error?.message || "").toLowerCase();
+        const message = 
+            apiErrorMessage === "wrong latitude" ? "Valor de latitude inválido" : 
+            apiErrorMessage === "wrong longitude" ? "Valor de longitude inválido" : 
+            "Erro ao buscar dados do tempo. Tente novamente.";
+
+        console.error(message);
+        alert(message);
     }
 }
 
@@ -205,15 +212,15 @@ function formatTime(time, timezone) {
     return `${hours}h${minutes}`
 }
 
-function clearWeatherInfo(){
+function clearWeatherInfo() {
     currentDate.textContent = '...';
     locationName.textContent = '...';
-    weatherIcon.src = './assets/loading-icon.svg'; 
+    weatherIcon.src = './assets/loading-icon.svg';
     weatherDescription.textContent = '...';
     currentTemperature.textContent = '...';
     windSpeed.textContent = '...';
     thermalSensation.textContent = '...';
     currentHumidity.textContent = '...';
     sunriseTime.textContent = '...';
-    sunsetTime.textContent =    '...';
+    sunsetTime.textContent = '...';
 }

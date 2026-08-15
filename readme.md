@@ -30,9 +30,10 @@ Você pode testar a aplicação diretamente no navegador, sem baixar nada. Acess
 
 ## Tecnologias utilizadas
 
-- HTML, CSS, Javascript;
-- Vercel (Hospedagem e Função Serverless).
+- Frontend: HTML, CSS, Javascript;
+- Hospedagem da página: Vercel; 
+- Cloud e função sem servidor: Azure e Java 21.
 
-## Diagrama de Implantação
+## Arquitetura
 
-![esquema visual do Snapclima](diagrama-de-implantacao-snapclima.png)
+![arquitetura do Snapclima](arquitetura-snapclima.png)
