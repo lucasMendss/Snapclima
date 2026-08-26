@@ -95,7 +95,7 @@ function toggleTemperatureUnitOfMeasure() {
 }
 
 function requestCurrentLocationWeather() {
-    locationSearchInput.value = "";
+    clearWeatherInfo();
 
     navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -126,7 +126,12 @@ async function getAndDisplayWeather({ location, lat, lon }) {
         return;
     }
 
-    weatherIcon.src = "./assets/loading-icon.svg";
+    if(String(location).length > 60) { 
+        alert("Texto de entrada muito longo.");
+        return; 
+    }
+
+    clearWeatherInfo();
 
     const params = new URLSearchParams();
 
