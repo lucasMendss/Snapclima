@@ -6,6 +6,8 @@ const currentLocationSearchButton = document.getElementById('current-location-se
 const themeToggleButton = document.getElementById('theme-toggle-button')
 const themeToggleIcon = themeToggleButton?.querySelector('img')
 const temperatureUnitButton = document.querySelector('.header__temperature-unit-button')
+const infoWindowDiv = document.querySelector('.info-window-div')
+const closeInfoWindowButton = document.getElementById('close-info-window-button')
 
 // display vars
 const currentDate = document.getElementById('current-date')
@@ -37,8 +39,17 @@ if (currentLocationSearchButton) {
     currentLocationSearchButton.addEventListener("click", requestCurrentLocationWeather);
 }
 
+if (closeInfoWindowButton && infoWindowDiv) {
+    closeInfoWindowButton.addEventListener('click', () => {
+        infoWindowDiv.style.display = 'none'
+        document.body.classList.remove('modal-open')
+    })
+}
+
 locationSearchButton.addEventListener("click", () => {
-    getAndDisplayLocationWeather(locationSearchInput.value);
+    getAndDisplayWeather({
+        location: locationSearchInput.value
+    });
 })
 
 function toggleTheme() {
@@ -91,7 +102,10 @@ function requestCurrentLocationWeather() {
             let lat = position.coords.latitude
             let lon = position.coords.longitude
 
-            getAndDisplayCurrentLocationWeather(lat, lon)
+            getAndDisplayWeather({
+                lat,
+                lon
+            });
         },
         (err) => {
             if (err.code === 1) {
@@ -106,58 +120,45 @@ function requestCurrentLocationWeather() {
     )
 }
 
-// get and display weather functions
-async function getAndDisplayLocationWeather(locationName) {
-    if (String(locationName).trim() === "") {
+async function getAndDisplayWeather({ location, lat, lon }) {
+    if (location !== undefined && String(location).trim() === "") {
         alert("Digite o nome de algum local antes de pesquisar.");
         return;
     }
 
     weatherIcon.src = "./assets/loading-icon.svg";
 
+    const params = new URLSearchParams();
+
+    if (location !== undefined) {
+        params.set("location", location.trim());
+    } else {
+        params.set("lat", lat);
+        params.set("lon", lon);
+    }
+
     try {
-        const response = await fetch(`${WEATHER_API_URL}?location=${locationName}`);
+        const response = await fetch(`${WEATHER_API_URL}?${params}`);
         const data = await response.json();
 
-       if (!response.ok) {
+        if (!response.ok) {
             throw new Error(data?.message);
         }
 
         displayWeatherInfo(data);
-    }
-    catch (error) {
+    } catch (error) {
         clearWeatherInfo();
 
         const apiErrorMessage = String(error?.message || "").toLowerCase();
-        const message = apiErrorMessage === "city not found" ? 
-            "Local não encontrado" :
-            "Erro ao buscar dados do tempo. Tente novamente.";
 
-        console.error(message);
-        alert(message);
-    }
-}
-
-async function getAndDisplayCurrentLocationWeather(lat, lon) {
-
-    try {
-        const response = await fetch(`${WEATHER_API_URL}?lat=${lat}&lon=${lon}`)
-        const data = await response.json();
-
-        if(!response.ok){
-            throw new Error(data?.message);
-        }
-
-        displayWeatherInfo(data);
-    }
-    catch (error) {
-        clearWeatherInfo();
-        
-        const apiErrorMessage = String(error?.message || "").toLowerCase();
-        const message = 
-            apiErrorMessage === "wrong latitude" ? "Valor de latitude inválido" : 
-            apiErrorMessage === "wrong longitude" ? "Valor de longitude inválido" : 
-            "Erro ao buscar dados do tempo. Tente novamente.";
+        const message =
+            apiErrorMessage === "city not found"
+                ? "Local não encontrado"
+                : apiErrorMessage === "wrong latitude"
+                    ? "Valor de latitude inválido"
+                    : apiErrorMessage === "wrong longitude"
+                        ? "Valor de longitude inválido"
+                        : "Erro ao buscar dados do tempo. Tente novamente.";
 
         console.error(message);
         alert(message);

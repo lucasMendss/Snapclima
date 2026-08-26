@@ -16,9 +16,15 @@
     <title>SnapClima</title>
 </head>
 
-<body>
+<body class="modal-open">
 
-    <div class="header__utility-buttons-div">
+    <div class="info-window-div">
+        <h3>SnapClima</h3>
+        <p>Veja o tempo de um local usando a barra de pesquisa ou clicando no botão "Usar meu local atual"</p>
+        <button id="close-info-window-button" type="button">Entendi</button>
+    </div>
+
+    <div class="utility-buttons-div">
         <button class="header__button header__theme-button" id="theme-toggle-button" aria-label="Alternar tema" title="Alterar tema da página">
           <img class="header__button-icon" src="./assets/dark-theme-icon.png" alt="Alternar tema escuro">
         </button>
@@ -34,7 +40,7 @@
         </button>
     </div>
 
-    <button class="header__button" id="current-location-search-button">Usar localização atual</button>
+    <button class="header__button" id="current-location-search-button">Usar meu local atual</button>
     
     <div class="header__current-date" id="current-date">...</div>
     <div class="header__location-name" id="location-name">...</div>
